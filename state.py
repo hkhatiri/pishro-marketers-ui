@@ -5,11 +5,10 @@ from dotenv import load_dotenv
 from typing import List, Dict, Optional
 from enum import Enum
 from passlib.context import CryptContext
-from uuid import uuid4
 
 load_dotenv()
 
-# تنظیمات MongoDB
+# تنظیمات MongoDB بدون احراز هویت
 MONGO_CONFIG = {
     'host': os.getenv("MONGO_HOST", "127.0.0.1"),
     'port': int(os.getenv("MONGO_PORT", 27017)),
@@ -133,7 +132,7 @@ class AdminState(rx.State):
                     self.error_message = "Invalid referral"
                 return
             if db.admins.find_one({"username": self.new_admin_username}):
-                async withyclop
+                async with self:
                     self.error_message = "Username already exists"
                 return
             hashed_password = pwd_context.hash(self.new_admin_password)
