@@ -1,4 +1,6 @@
 reflex
 pymongo
-python-dotenv # اگر از فایل .env برای تنظیمات استفاده می‌کنید
-bcrypt # برای هش کردن رمز عبور ادمین ها
+python-dotenv
+bcrypt
+sqlmodel
+reflex==0.7.11
