@@ -1,6 +1,7 @@
 import reflex as rx
 from ..styles import styles
-from state import *
+from ..state import AuthState, UserState  # اصلاح import
+
 def user_list():
     return rx.vstack(
         rx.heading(f"کاربران با رفرال {UserState.referral}"),

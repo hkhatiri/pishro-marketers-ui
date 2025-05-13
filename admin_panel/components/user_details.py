@@ -1,7 +1,8 @@
 import reflex as rx
 from ..styles import styles
+from ..state import UserState  # احتمالاً درست است، اما چک می‌کنیم
 from datetime import datetime
-from state import *
+
 def user_details():
     return rx.cond(
         UserState.selected_user,

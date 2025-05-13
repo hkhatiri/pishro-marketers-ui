@@ -1,6 +1,7 @@
 import reflex as rx
 from ..styles import styles
-from state import *
+from ..state import AuthState  # احتمالاً درست است، اما چک می‌کنیم
+
 def login_form():
     return rx.vstack(
         rx.heading("ورود به پنل مدیریتی"),
