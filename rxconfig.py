@@ -1,16 +1,10 @@
-# rxconfig.py
-import os
 import reflex as rx
+import os
 
-MONGO_CONFIG = {
-    "host": "127.0.0.1",
-    "port": 27017,
-}
-MONGO_DB_NAME = "marketersbot"
+DATABASE_URL = os.getenv("ADMIN_PANEL_DATABASE_URL", "sqlite:///admin_reflex.db")
 
 config = rx.Config(
-    app_name="customer_data",
-    # Remove db_url since we'll use MongoDB
-    mongo_config=MONGO_CONFIG,
-    mongo_db_name=MONGO_DB_NAME,
+    app_name="marketers_admin_panel",
+    db_url=DATABASE_URL, 
+    telemetry_enabled=False, 
 )
