@@ -4,7 +4,7 @@ from typing import Any, Union, List, Tuple, Optional
 
 from pymongo import MongoClient
 
-import settings
+import rxconfig
 
 ChatState = Enum(
     'ChatState', [
@@ -24,7 +24,7 @@ ChatState = Enum(
 class Mongo:
     def __init__(self, mongo_db) -> None:
         self.mongo_db = mongo_db
-        self.client = MongoClient(**settings.MONGO_CONFIG)
+        self.client = MongoClient(**rxconfig.MONGO_CONFIG)
         self.db = self.client[self.mongo_db]
 
     def drop_database(self):
@@ -102,7 +102,7 @@ class UserBase:
     @property
     def db(self):
         if self._db is None:
-            client = MongoClient(**settings.MONGO_CONFIG)
+            client = MongoClient(**rxconfig.MONGO_CONFIG)
             self._db = client[self._db_name]
 
         return self._db
