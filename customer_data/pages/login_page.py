@@ -1,3 +1,4 @@
+# customer_data/pages/login_page.py
 import reflex as rx
 # اطمینان از اینکه AuthState به درستی import شده است
 try:
@@ -37,7 +38,7 @@ def login_page() -> rx.Component:
                     rx.cond(
                         AuthState.error_message != "",
                         rx.callout.root(
-                            rx.callout.icon(rx.icon("alert_circle")), # <<< آیکون اصلاح شد
+                            rx.callout.icon(rx.icon("shield-alert")), # <--- آیکون معتبر
                             rx.callout.text(AuthState.error_message),
                             color_scheme="red", variant="soft", margin_top="1em", width="300px",
                         ),
@@ -47,7 +48,8 @@ def login_page() -> rx.Component:
                 ),
                 on_submit=AuthState.handle_login, width="auto"
             ),
-            padding="2em", border_radius="md", box_shadow="lg", bg=rx.color("gray", 2), align_items="center"
+            padding="2em", border_radius="md", box_shadow="lg", bg=rx.color("gray", 2), align_items="center" # رنگ پس‌زمینه کمی تیره‌تر شد
         ),
         height="100vh", width="100%",
+        # background="radial-gradient(circle, var(--gray-a3), var(--gray-a1))", # پس‌زمینه گرادیان برای صفحه
     )

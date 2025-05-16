@@ -6,7 +6,7 @@ import { Button as RadixThemesButton, Callout as RadixThemesCallout, Flex as Rad
 import { Field as RadixFormField, Label as RadixFormLabel, Root as RadixFormRoot } from "@radix-ui/react-form"
 import { EventLoopContext, StateContexts } from "$/utils/context"
 import { Event, getRefValue, getRefValues, isNotNullOrUndefined, isTrue } from "$/utils/state"
-import { CircleHelp as LucideCircleHelp, KeyRound as LucideKeyRound, User as LucideUser } from "lucide-react"
+import { KeyRound as LucideKeyRound, ShieldAlert as LucideShieldAlert, User as LucideUser } from "lucide-react"
 import { DebounceInput } from "react-debounce-input"
 import NextHead from "next/head"
 import { jsx } from "@emotion/react"
@@ -30,24 +30,7 @@ export function Debounceinput_328554e00761a2fb76589cfa7468ad68 () {
   )
 }
 
-export function Debounceinput_df0ac1161342897bd6b435f6238a857f () {
-  
-  const reflex___state____state__customer_data___backend___auth_state____auth_state = useContext(StateContexts.reflex___state____state__customer_data___backend___auth_state____auth_state)
-  const [addEvents, connectErrors] = useContext(EventLoopContext);
-
-
-  const on_change_a09f472fadc20a84f1163a0597c1e472 = useCallback(((_e) => (addEvents([(Event("reflex___state____state.customer_data___backend___auth_state____auth_state.set_entered_password", ({ ["value"] : _e["target"]["value"] }), ({  })))], [_e], ({  })))), [addEvents, Event])
-
-
-
-  
-  return (
-    jsx(DebounceInput,{css:({ ["width"] : "300px" }),debounceTimeout:300,element:RadixThemesTextField.Root,onChange:on_change_a09f472fadc20a84f1163a0597c1e472,placeholder:"\u0631\u0645\u0632 \u0639\u0628\u0648\u0631...",size:"3",type:"password",value:(isNotNullOrUndefined(reflex___state____state__customer_data___backend___auth_state____auth_state.entered_password) ? reflex___state____state__customer_data___backend___auth_state____auth_state.entered_password : "")},)
-
-  )
-}
-
-export function Root_7f247c18f0880435a058398933a8e5ec () {
+export function Root_a9274d65806677317db0425d87a24a1f () {
   
   const [addEvents, connectErrors] = useContext(EventLoopContext);
 
@@ -100,7 +83,7 @@ RadixFormLabel,
 {className:"Label ",css:({ ["fontSize"] : "15px", ["fontWeight"] : "500", ["lineHeight"] : "35px" })},
 "\u0631\u0645\u0632 \u0639\u0628\u0648\u0631"
 ,),),jsx(Debounceinput_df0ac1161342897bd6b435f6238a857f,{},)
-,),jsx(Fragment_8f07c0c0b9c5f7e677094d5ae0bd3317,{},)
+,),jsx(Fragment_617c8c04aa69b7df4cfa5dd69d97e510,{},)
 ,jsx(
 RadixThemesButton,
 {color:"grass",css:({ ["width"] : "300px", ["marginTop"] : "1em" }),size:"3",type:"submit"},
@@ -109,7 +92,24 @@ RadixThemesButton,
   )
 }
 
-export function Fragment_8f07c0c0b9c5f7e677094d5ae0bd3317 () {
+export function Debounceinput_df0ac1161342897bd6b435f6238a857f () {
+  
+  const reflex___state____state__customer_data___backend___auth_state____auth_state = useContext(StateContexts.reflex___state____state__customer_data___backend___auth_state____auth_state)
+  const [addEvents, connectErrors] = useContext(EventLoopContext);
+
+
+  const on_change_a09f472fadc20a84f1163a0597c1e472 = useCallback(((_e) => (addEvents([(Event("reflex___state____state.customer_data___backend___auth_state____auth_state.set_entered_password", ({ ["value"] : _e["target"]["value"] }), ({  })))], [_e], ({  })))), [addEvents, Event])
+
+
+
+  
+  return (
+    jsx(DebounceInput,{css:({ ["width"] : "300px" }),debounceTimeout:300,element:RadixThemesTextField.Root,onChange:on_change_a09f472fadc20a84f1163a0597c1e472,placeholder:"\u0631\u0645\u0632 \u0639\u0628\u0648\u0631...",size:"3",type:"password",value:(isNotNullOrUndefined(reflex___state____state__customer_data___backend___auth_state____auth_state.entered_password) ? reflex___state____state__customer_data___backend___auth_state____auth_state.entered_password : "")},)
+
+  )
+}
+
+export function Fragment_617c8c04aa69b7df4cfa5dd69d97e510 () {
   
   const reflex___state____state__customer_data___backend___auth_state____auth_state = useContext(StateContexts.reflex___state____state__customer_data___backend___auth_state____auth_state)
 
@@ -131,7 +131,7 @@ RadixThemesCallout.Root,
 jsx(
 RadixThemesCallout.Icon,
 {},
-jsx(LucideCircleHelp,{},)
+jsx(LucideShieldAlert,{},)
 ,),jsx(Callout__text_d2afa9ce678df8a465af73d67d8a0c5c,{},)
 ,),)) : (jsx(Fragment,{},)
 )),)
@@ -176,7 +176,7 @@ jsx(
 RadixThemesHeading,
 {css:({ ["textAlign"] : "center", ["marginBottom"] : "1em" }),size:"7"},
 "\u0648\u0631\u0648\u062f \u0628\u0647 \u067e\u0646\u0644 \u0627\u062f\u0645\u06cc\u0646"
-,),jsx(Root_7f247c18f0880435a058398933a8e5ec,{},)
+,),jsx(Root_a9274d65806677317db0425d87a24a1f,{},)
 ,),),jsx(
 NextHead,
 {},

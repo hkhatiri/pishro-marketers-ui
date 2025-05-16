@@ -1,103 +1,132 @@
+# customer_data/components/stats_cards.py
 import reflex as rx
 from reflex.components.radix.themes.base import (
     LiteralAccentColor,
 )
-from typing import Union
-# State اصلی را برای دسترسی به var ها import می‌کنیم
-# مسیر import باید با ساختار پروژه شما مطابقت داشته باشد
+from typing import Union, List, Optional, Tuple
+
 try:
     from ..backend.backend import State as MainState
+    from ..backend.auth_state import AuthState, LEVEL_TRANSLATIONS, NO_LEVEL_VALUE_INTERNAL
 except ImportError:
-    try:
-        from customer_data.backend.backend import State as MainState
-    except ImportError:
-        # Mock State برای جلوگیری از خطای کامل برنامه در صورت مشکل import
-        class MainState(rx.State): # type: ignore
-            class MockMonthValues(rx.Base):
-                num_customers: int = 0
-            current_month_values: MockMonthValues = MockMonthValues()
-            previous_month_values: MockMonthValues = MockMonthValues()
-            
-            @rx.var
-            def total_users_for_current_referral(self) -> int: return 0
-            @rx.var
-            def customers_change(self) -> float: return 0.0
+    # فال‌بک‌ها
+    from customer_data.backend.backend import State as MainState # type: ignore
+    from customer_data.backend.auth_state import AuthState, LEVEL_TRANSLATIONS, NO_LEVEL_VALUE_INTERNAL # type: ignore
 
 
-def _arrow_badge(arrow_icon: rx.Var[str], percentage_change: rx.Var[float], arrow_color: rx.Var[str]):
-    # --- اصلاح شده: حذف آرگومان decimals از to_string() ---
-    change_text = percentage_change.to_string() + "%" 
-    return rx.badge(
-        rx.icon(tag=arrow_icon, color=rx.color(arrow_color, 9)),
-        rx.text(change_text, size="2", color=rx.color(arrow_color, 9), weight="medium"),
-        color_scheme=arrow_color, radius="large", align_items="center",
-    )
+# ... (توابع _build_trend_badge_display و _build_prev_value_text_display و stats_card بدون تغییر از نسخه قبلی که کار می‌کرد) ...
+def _build_trend_badge_display(
+    percentage_change_opt: Optional[rx.Var[float]],
+    trend_icon_cond_opt: Optional[rx.Var[bool]]
+) -> rx.Component:
+    if percentage_change_opt is not None and trend_icon_cond_opt is not None:
+        condition = percentage_change_opt.is_not_none() & trend_icon_cond_opt.is_not_none()
+        
+        arrow_icon = rx.cond(trend_icon_cond_opt, "trending-up", "trending-down")
+        arrow_color = rx.cond(trend_icon_cond_opt, "grass", "tomato")
+        
+        badge_content = rx.badge(
+            rx.icon(tag=arrow_icon, color=rx.color(arrow_color, 9)), # type: ignore
+            rx.text(percentage_change_opt.to_string() + "%", size="2", weight="bold"),
+            radius="full", padding_x="0.65rem", padding_y="0.2rem",
+            color_scheme=arrow_color, variant="soft" # type: ignore
+        )
+        return rx.cond(condition, badge_content, rx.text(""))
+    return rx.text("")
 
+def _build_prev_value_text_display(
+    prev_value_opt: Optional[rx.Var[Union[int, float]]],
+    unit_char: str
+) -> rx.Component:
+    if prev_value_opt is not None:
+        condition = prev_value_opt.is_not_none()
+        text_content = rx.text(
+            "از " + prev_value_opt.to_string() + unit_char,
+            size="3", color=rx.color("gray", 10)
+        )
+        return rx.cond(condition, text_content, rx.text(""))
+    return rx.text("")
 
 def stats_card(
-    stat_name: str,
-    value: rx.Var[Union[int, float]], 
-    prev_value: rx.Var[Union[int, float]], 
-    percentage_change: rx.Var[float], 
-    icon: str,
-    icon_color: LiteralAccentColor,
-    extra_char: str = "",
+    stat_name: Union[str, rx.Var[str]],
+    value: rx.Var[Union[int, float]],
+    prev_value: Optional[rx.Var[Union[int, float]]] = None,
+    percentage_change: Optional[rx.Var[float]] = None,
+    trend_icon_cond: Optional[rx.Var[bool]] = None,
+    unit: str = "",
+    main_icon: Union[str, rx.Var[str]] = "bar-chart-big",
+    main_icon_bg_color: Union[LiteralAccentColor, rx.Var[LiteralAccentColor]] = "gray",
 ) -> rx.Component:
-    
-    cond_prev_value_not_zero = prev_value != 0 
-    cond_percentage_not_inf = percentage_change != float("inf")
-    cond_percentage_not_neg_inf = percentage_change != -float("inf")
-    
-    show_arrow_badge_condition = cond_prev_value_not_zero & cond_percentage_not_inf & cond_percentage_not_neg_inf
-
-    cond_value_ge_prev = value >= prev_value
+    extra_char = " " + unit if unit else ""
+    trend_badge_element = _build_trend_badge_display(percentage_change, trend_icon_cond)
+    prev_value_text_element = _build_prev_value_text_display(prev_value, extra_char)
 
     return rx.card(
-        rx.hstack(
+        rx.flex(
+            rx.badge(
+                rx.icon(tag=main_icon, size=28, color=rx.color(main_icon_bg_color, 11)), # type: ignore
+                radius="full", padding="0.65rem", color_scheme=main_icon_bg_color, # type: ignore
+                variant="surface", high_contrast=True,
+            ),
             rx.vstack(
                 rx.hstack(
-                    rx.hstack(
-                        rx.icon(tag=icon, size=22, color=rx.color(icon_color, 11)),
-                        rx.text(stat_name, size="4", weight="medium", color=rx.color("gray", 11)),
-                        spacing="2", align="center",
-                    ),
-                    rx.cond( 
-                        show_arrow_badge_condition,
-                         _arrow_badge(
-                            rx.cond(cond_value_ge_prev, "trending-up", "trending-down"),
-                            percentage_change, 
-                            rx.cond(cond_value_ge_prev, "grass", "tomato")
-                        ),
-                        rx.text("") 
-                    ),
+                    rx.text(stat_name, size="3", weight="medium", color=rx.color("gray", 11)),
+                    rx.spacer(),
+                    trend_badge_element,
                     justify="between", width="100%",
                 ),
                 rx.hstack(
-                    rx.heading(extra_char + value.to_string(), size="7", weight="bold"),
-                    rx.cond(
-                        cond_prev_value_not_zero, 
-                        rx.text("از " + extra_char + prev_value.to_string(), size="3", color=rx.color("gray", 10)),
-                        rx.text(""),
-                    ),
+                    rx.heading(value.to_string() + extra_char, size="7", weight="bold"),
+                    prev_value_text_element,
                     spacing="2", align_items="end",
                 ),
                 align_items="start", justify="between", width="100%",
             ),
-            align_items="start", width="100%", justify="between",
+            align_items="start", width="100%", justify="between", spacing="4"
         ),
-        size="3", width="100%", max_width="22rem",
+        size="3", width="100%", style={"height": "100%"}
     )
 
 
 def stats_cards_group() -> rx.Component:
-    """گروه کارت‌های آمار."""
-    return rx.flex(
-        stats_card(
-            "تعداد کل کاربران معرف", 
-            MainState.total_users_for_current_referral,
-            MainState.previous_month_values.num_customers, 
-            MainState.customers_change,
-            "users", "blue",
-        ),
-        spacing="5", width="100%", wrap="wrap", justify_content="center",
+    all_users_card = stats_card(
+        stat_name="تعداد کل کاربران شما",
+        value=MainState.total_users_for_current_referral,
+        unit="کاربر", main_icon="users", main_icon_bg_color="grass",
+    )
+
+    # --- کارت جدید برای تعداد کاربران در کانال‌ها ---
+    users_in_channels_stat_card = stats_card(
+        stat_name="کاربران عضو کانال", # یا "تعداد عضویت در کانال‌ها"
+        value=MainState.users_in_channels_count_var, # استفاده از @rx.var جدید
+        unit="نفر", # یا "عضویت"
+        main_icon="rss", # آیکون مناسب برای کانال‌ها
+        main_icon_bg_color="cyan", # رنگ دلخواه
+    )
+
+    level_cards_display_section = rx.foreach(
+        AuthState.allowed_levels_for_current_referral,
+        lambda level_key: rx.cond(
+            level_key != NO_LEVEL_VALUE_INTERNAL,
+            stats_card(
+                stat_name=rx.Var.create(LEVEL_TRANSLATIONS.get(level_key, level_key.replace("level_", "سطح "))),
+                value=MainState.user_counts_by_level_var.get(level_key, 0),
+                unit="کاربر",
+                main_icon=rx.cond(level_key == "level_1", "user-round-check", 
+                            rx.cond(level_key == "level_2", "user-round-cog", 
+                            rx.cond(level_key == "level_golden", "gem", "award"))),
+                main_icon_bg_color=rx.cond(level_key == "level_1", "blue", 
+                                    rx.cond(level_key == "level_2", "orange", 
+                                    rx.cond(level_key == "level_golden", "yellow", "purple"))), # type: ignore
+            ),
+            rx.fragment()
+        )
+    )
+
+    return rx.grid(
+        all_users_card,
+        users_in_channels_stat_card, # <--- اضافه کردن کارت جدید به گرید
+        level_cards_display_section,
+        columns={"initial": "1", "sm": "2", "md": "2", "lg": "4", "xl": "5"}, # اضافه کردن یک breakpoint برای 5 کارت
+        spacing="3", width="100%", align_items="stretch", padding_y="0.5em",
     )
