@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import { useRef, useEffect, useState, createElement } from "react";
+import { useRef, useEffect, useState } from "react";
 import {
   ColorModeContext,
   defaultColorMode,
@@ -50,11 +50,11 @@ export default function RadixThemesColorModeProvider({ children }) {
     }
     setTheme(mode);
   };
-  return createElement(
-    ColorModeContext,
-    {
-      value: { rawColorMode, resolvedColorMode, toggleColorMode, setColorMode },
-    },
-    children,
+  return (
+    <ColorModeContext
+      value={{ rawColorMode, resolvedColorMode, toggleColorMode, setColorMode }}
+    >
+      {children}
+    </ColorModeContext>
   );
 }

@@ -31,6 +31,7 @@ app = rx.App(
     theme=rx.theme(
         appearance="dark", has_background=True, radius="large", accent_color="grass"
     ),
+    stylesheets=[]
 )
 
 # صفحه اصلی از طریق app.add_page با on_load تعریف می‌شود

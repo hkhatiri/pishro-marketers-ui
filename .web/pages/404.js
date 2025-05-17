@@ -6,11 +6,10 @@ import { isTrue } from "$/utils/state"
 import Error from "next/error"
 import { useClientSideRouting } from "$/utils/client_side_routing"
 import NextHead from "next/head"
-import { jsx } from "@emotion/react"
 
 
 
-export function Fragment_d0bdc6abf12da3a0029322b41e7c0a07 () {
+export function Fragment_4d5c309f6c2a2b60979d7921552e7404 () {
   
 
   const routeNotFound = useClientSideRouting()
@@ -20,17 +19,20 @@ export function Fragment_d0bdc6abf12da3a0029322b41e7c0a07 () {
 
   
   return (
-    jsx(
-Fragment,
-{},
-(isTrue(routeNotFound) ? (jsx(
-Fragment,
-{},
-jsx(Error,{statusCode:404},)
-,)) : (jsx(
-Fragment,
-{},
-))),)
+    <Fragment>
+
+{isTrue(routeNotFound) ? (
+  <Fragment>
+
+<Error statusCode={404}/>
+</Fragment>
+) : (
+  <Fragment>
+
+
+</Fragment>
+)}
+</Fragment>
   )
 }
 
@@ -41,19 +43,18 @@ export default function Component() {
 
 
   return (
-    jsx(
-Fragment,
-{},
-jsx(Fragment_d0bdc6abf12da3a0029322b41e7c0a07,{},)
-,jsx(
-NextHead,
-{},
-jsx(
-"title",
-{},
-"404 - Not Found"
-,),jsx("meta",{content:"The page was not found",name:"description"},)
-,jsx("meta",{content:"favicon.ico",property:"og:image"},)
-,),)
+    <Fragment>
+
+<Fragment_4d5c309f6c2a2b60979d7921552e7404/>
+<NextHead>
+
+<title>
+
+{"404 - Not Found"}
+</title>
+<meta content={"The page was not found"} name={"description"}/>
+<meta content={"favicon.ico"} property={"og:image"}/>
+</NextHead>
+</Fragment>
   )
 }

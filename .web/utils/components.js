@@ -2,11 +2,11 @@
 
 
 import { Fragment, memo, useContext, useEffect, useState } from "react"
-import { Event, getBackendURL, isTrue, refs } from "$/utils/state"
+import { E, Event, getBackendURL, isTrue, refs } from "$/utils/state"
 import { toast, Toaster } from "sonner"
 import { ColorModeContext, EventLoopContext } from "$/utils/context"
 import { WifiOff as LucideWifiOff } from "lucide-react"
-import { jsx, keyframes } from "@emotion/react"
+import { keyframes } from "@emotion/react"
 import env from "$/env.json"
 
 
@@ -31,8 +31,7 @@ export const MemoizedToastProvider = memo(({}) => {
 
 
     return(
-        jsx(Toaster,{closeButton:false,expand:true,position:"bottom-right",richColors:true,theme:resolvedColorMode},)
-
+        <Toaster closeButton={false} expand={true} position={"bottom-right"} richColors={true} theme={resolvedColorMode}/>
       )
 
 })
@@ -61,22 +60,24 @@ export const DefaultOverlayComponents = memo(({}) => {
 
 
     return(
-        jsx(
-Fragment,
-{},
-jsx(
-"div",
-{css:({ ["position"] : "fixed", ["width"] : "100vw", ["height"] : "0" }),title:("Connection Error: "+((connectErrors.length > 0) ? connectErrors[connectErrors.length - 1].message : ''))},
-jsx(
-Fragment,
-{},
-((connectErrors.length > 0) ? (jsx(
-Fragment,
-{},
-jsx(LucideWifiOff,{css:({ ["color"] : "crimson", ["zIndex"] : 9999, ["position"] : "fixed", ["bottom"] : "33px", ["right"] : "33px", ["animation"] : (pulse+" 1s infinite") }),size:32},)
-,)) : (jsx(Fragment,{},)
-)),),),jsx(Fragment,{},)
-,)
+        <Fragment>
+
+<div css={({ ["position"] : "fixed", ["width"] : "100vw", ["height"] : "0" })} title={("Connection Error: "+((connectErrors.length > 0) ? connectErrors[connectErrors.length - 1].message : ''))}>
+
+<Fragment>
+
+{(connectErrors.length > 0) ? (
+  <Fragment>
+
+<LucideWifiOff css={({ ["color"] : "crimson", ["zIndex"] : 9999, ["position"] : "fixed", ["bottom"] : "33px", ["right"] : "33px", ["animation"] : (pulse+" 1s infinite") })} size={32}/>
+</Fragment>
+) : (
+  <Fragment/>
+)}
+</Fragment>
+</div>
+<Fragment/>
+</Fragment>
       )
 
 })

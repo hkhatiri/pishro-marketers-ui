@@ -180,23 +180,23 @@ class State(rx.State):
         for user_data in mongo_users_cursor: # type: ignore
             created_at_ts_val = user_data.get('created_at')
             updated_at_ts_val = user_data.get('updated_at')
-            created_at_jalali_str = "نامشخص"
+            created_at_jalali_str = "-"
             if isinstance(created_at_ts_val, (int, float)):
                 try:
                     dt_utc_naive = datetime.datetime.utcfromtimestamp(created_at_ts_val)
                     dt_utc_aware = pytz.utc.localize(dt_utc_naive)
                     dt_tehran = dt_utc_aware.astimezone(TEHRAN_TZ)
                     j_datetime_tehran = jdatetime.datetime.fromgregorian(datetime=dt_tehran)
-                    created_at_jalali_str = j_datetime_tehran.strftime('%Y/%m/%d ساعت %H:%M:%S')
+                    created_at_jalali_str = j_datetime_tehran.strftime('%Y/%m/%d  %H:%M:%S')
                 except Exception: created_at_jalali_str = str(datetime.datetime.fromtimestamp(created_at_ts_val)) 
-            updated_at_jalali_str = "نامشخص"
+            updated_at_jalali_str = "-"
             if isinstance(updated_at_ts_val, (int, float)):
                 try:
                     dt_utc_naive_up = datetime.datetime.utcfromtimestamp(updated_at_ts_val)
                     dt_utc_aware_up = pytz.utc.localize(dt_utc_naive_up)
                     dt_tehran_up = dt_utc_aware_up.astimezone(TEHRAN_TZ)
                     j_datetime_tehran_up = jdatetime.datetime.fromgregorian(datetime=dt_tehran_up)
-                    updated_at_jalali_str = j_datetime_tehran_up.strftime('%Y/%m/%d ساعت %H:%M:%S')
+                    updated_at_jalali_str = j_datetime_tehran_up.strftime('%Y/%m/%d  %H:%M:%S')
                 except Exception: updated_at_jalali_str = str(datetime.datetime.fromtimestamp(updated_at_ts_val)) 
 
             display_user: MongoUserDisplay = {
@@ -208,7 +208,7 @@ class State(rx.State):
                 'updated_at_str': updated_at_jalali_str,
                 'created_at_ts': float(created_at_ts_val) if isinstance(created_at_ts_val, (int, float)) else None,
                 'channel_count': len(user_data.get('channels', [])) if isinstance(user_data.get('channels'), list) else 0,
-                'chat_state_fa': CHAT_STATE_TRANSLATIONS.get(user_data.get('chat_state', ""), user_data.get('chat_state', "") or "نامشخص"),
+                'chat_state_fa': CHAT_STATE_TRANSLATIONS.get(user_data.get('chat_state', ""), user_data.get('chat_state', "") or "-"),
                 'level': user_data.get('level') if isinstance(user_data.get('level'), str) else None,
             }
             if display_user['_id_str'] is None: continue
