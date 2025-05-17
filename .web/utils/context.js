@@ -1,7 +1,7 @@
-import { createContext, useContext, useMemo, useReducer, useState } from "react"
+import { createContext, useContext, useMemo, useReducer, useState, createElement } from "react"
 import { applyDelta, Event, hydrateClientStorage, useEventLoop, refs } from "$/utils/state.js"
 
-export const initialState = {"reflex___state____state": {"is_hydrated": false, "router": {"session": {"client_token": "", "client_ip": "", "session_id": ""}, "headers": {"host": "", "origin": "", "upgrade": "", "connection": "", "cookie": "", "pragma": "", "cache_control": "", "user_agent": "", "sec_websocket_version": "", "sec_websocket_key": "", "sec_websocket_extensions": "", "accept_encoding": "", "accept_language": "", "raw_headers": {}}, "page": {"host": "", "path": "", "raw_path": "", "full_path": "", "full_raw_path": "", "params": {}}}}, "reflex___state____state.reflex___state____update_vars_internal_state": {}, "reflex___state____state.customer_data___backend___backend____state": {"current_month_values": {"num_customers": 0}, "current_page_number": 1, "current_user_for_edit": null, "customers_change": 0.0, "paginated_users": [], "previous_month_values": {"num_customers": 0}, "search_value": "", "sort_reverse": true, "sort_value": "created_at_ts", "total_pages": 1, "total_registered_users": 0, "total_users_for_current_referral": 0, "user_counts_by_level": {}, "user_counts_by_level_var": {}, "users": [], "users_in_channels_count": 0, "users_in_channels_count_var": 0, "users_per_page": 10}, "reflex___state____state.reflex___state____on_load_internal_state": {}, "reflex___state____state.reflex___state____frontend_event_exception_state": {}, "reflex___state____state.customer_data___backend___auth_state____auth_state": {"allowed_levels_for_current_referral": ["level_0"], "current_admin_username": null, "current_logged_in_referral": null, "entered_password": "", "entered_username": "", "error_message": "", "is_logged_in": false, "level_options_for_dropdown": [["پایه", "level_0"], ["-", "_NO_LEVEL_"]], "token_is_valid": false}}
+export const initialState = {"reflex___state____state": {"is_hydrated": false, "router": {"session": {"client_token": "", "client_ip": "", "session_id": ""}, "headers": {"host": "", "origin": "", "upgrade": "", "connection": "", "cookie": "", "pragma": "", "cache_control": "", "user_agent": "", "sec_websocket_version": "", "sec_websocket_key": "", "sec_websocket_extensions": "", "accept_encoding": "", "accept_language": "", "raw_headers": {}}, "page": {"host": "", "path": "", "raw_path": "", "full_path": "", "full_raw_path": "", "params": {}}}}, "reflex___state____state.reflex___state____on_load_internal_state": {}, "reflex___state____state.reflex___state____update_vars_internal_state": {}, "reflex___state____state.customer_data___backend___auth_state____auth_state": {"allowed_levels_for_current_referral": ["level_0"], "current_admin_username": null, "current_logged_in_referral": null, "entered_password": "", "entered_username": "", "error_message": "", "is_logged_in": false, "level_options_for_dropdown": [["پایه", "level_0"], ["-", "_NO_LEVEL_"]], "token_is_valid": false}, "reflex___state____state.reflex___state____frontend_event_exception_state": {}, "reflex___state____state.customer_data___backend___backend____state": {"current_month_values": {"num_customers": 0}, "current_page_number": 1, "current_user_for_edit": null, "customers_change": 0.0, "paginated_users": [], "previous_month_values": {"num_customers": 0}, "search_value": "", "sort_reverse": true, "sort_value": "created_at_ts", "total_pages": 1, "total_registered_users": 0, "total_users_for_current_referral": 0, "user_counts_by_level": {}, "user_counts_by_level_var": {}, "users": [], "users_in_channels_count": 0, "users_in_channels_count_var": 0, "users_per_page": 10}}
 
 export const defaultColorMode = "dark"
 export const ColorModeContext = createContext(null);
@@ -9,11 +9,11 @@ export const UploadFilesContext = createContext(null);
 export const DispatchContext = createContext(null);
 export const StateContexts = {
   reflex___state____state: createContext(null),
-  reflex___state____state__reflex___state____update_vars_internal_state: createContext(null),
-  reflex___state____state__customer_data___backend___backend____state: createContext(null),
   reflex___state____state__reflex___state____on_load_internal_state: createContext(null),
-  reflex___state____state__reflex___state____frontend_event_exception_state: createContext(null),
+  reflex___state____state__reflex___state____update_vars_internal_state: createContext(null),
   reflex___state____state__customer_data___backend___auth_state____auth_state: createContext(null),
+  reflex___state____state__reflex___state____frontend_event_exception_state: createContext(null),
+  reflex___state____state__customer_data___backend___backend____state: createContext(null),
 }
 export const EventLoopContext = createContext(null);
 export const clientStorage = {"cookies": {}, "local_storage": {}, "session_storage": {}}
@@ -53,7 +53,7 @@ export const initialEvents = () => [
 
 export const isDevMode = true
 
-export const lastCompiledTimeStamp = "2025-05-17 13:42:33.265748"
+export const lastCompiledTimeStamp = "2025-05-17 20:55:18.934425"
 
 export function UploadFilesProvider({ children }) {
   const [filesById, setFilesById] = useState({})
@@ -62,11 +62,7 @@ export function UploadFilesProvider({ children }) {
     delete newFilesById[id]
     return newFilesById
   })
-  return (
-    <UploadFilesContext value={[filesById, setFilesById]}>
-      {children}
-    </UploadFilesContext>
-  )
+  return createElement(UploadFilesContext, {value:[filesById, setFilesById]}, children);
 }
 
 export function EventLoopProvider({ children }) {
@@ -76,46 +72,34 @@ export function EventLoopProvider({ children }) {
     initialEvents,
     clientStorage,
   )
-  return (
-    <EventLoopContext value={[addEvents, connectErrors]}>
-      {children}
-    </EventLoopContext>
-  )
+  return createElement(EventLoopContext, {value:[addEvents, connectErrors]}, children);
 }
 
 export function StateProvider({ children }) {
   const [reflex___state____state, dispatch_reflex___state____state] = useReducer(applyDelta, initialState["reflex___state____state"])
-  const [reflex___state____state__reflex___state____update_vars_internal_state, dispatch_reflex___state____state__reflex___state____update_vars_internal_state] = useReducer(applyDelta, initialState["reflex___state____state.reflex___state____update_vars_internal_state"])
-  const [reflex___state____state__customer_data___backend___backend____state, dispatch_reflex___state____state__customer_data___backend___backend____state] = useReducer(applyDelta, initialState["reflex___state____state.customer_data___backend___backend____state"])
   const [reflex___state____state__reflex___state____on_load_internal_state, dispatch_reflex___state____state__reflex___state____on_load_internal_state] = useReducer(applyDelta, initialState["reflex___state____state.reflex___state____on_load_internal_state"])
-  const [reflex___state____state__reflex___state____frontend_event_exception_state, dispatch_reflex___state____state__reflex___state____frontend_event_exception_state] = useReducer(applyDelta, initialState["reflex___state____state.reflex___state____frontend_event_exception_state"])
+  const [reflex___state____state__reflex___state____update_vars_internal_state, dispatch_reflex___state____state__reflex___state____update_vars_internal_state] = useReducer(applyDelta, initialState["reflex___state____state.reflex___state____update_vars_internal_state"])
   const [reflex___state____state__customer_data___backend___auth_state____auth_state, dispatch_reflex___state____state__customer_data___backend___auth_state____auth_state] = useReducer(applyDelta, initialState["reflex___state____state.customer_data___backend___auth_state____auth_state"])
+  const [reflex___state____state__reflex___state____frontend_event_exception_state, dispatch_reflex___state____state__reflex___state____frontend_event_exception_state] = useReducer(applyDelta, initialState["reflex___state____state.reflex___state____frontend_event_exception_state"])
+  const [reflex___state____state__customer_data___backend___backend____state, dispatch_reflex___state____state__customer_data___backend___backend____state] = useReducer(applyDelta, initialState["reflex___state____state.customer_data___backend___backend____state"])
   const dispatchers = useMemo(() => {
     return {
       "reflex___state____state": dispatch_reflex___state____state,
-      "reflex___state____state.reflex___state____update_vars_internal_state": dispatch_reflex___state____state__reflex___state____update_vars_internal_state,
-      "reflex___state____state.customer_data___backend___backend____state": dispatch_reflex___state____state__customer_data___backend___backend____state,
       "reflex___state____state.reflex___state____on_load_internal_state": dispatch_reflex___state____state__reflex___state____on_load_internal_state,
-      "reflex___state____state.reflex___state____frontend_event_exception_state": dispatch_reflex___state____state__reflex___state____frontend_event_exception_state,
+      "reflex___state____state.reflex___state____update_vars_internal_state": dispatch_reflex___state____state__reflex___state____update_vars_internal_state,
       "reflex___state____state.customer_data___backend___auth_state____auth_state": dispatch_reflex___state____state__customer_data___backend___auth_state____auth_state,
+      "reflex___state____state.reflex___state____frontend_event_exception_state": dispatch_reflex___state____state__reflex___state____frontend_event_exception_state,
+      "reflex___state____state.customer_data___backend___backend____state": dispatch_reflex___state____state__customer_data___backend___backend____state,
     }
   }, [])
 
   return (
-    <StateContexts.reflex___state____state value={ reflex___state____state }>
-    <StateContexts.reflex___state____state__reflex___state____update_vars_internal_state value={ reflex___state____state__reflex___state____update_vars_internal_state }>
-    <StateContexts.reflex___state____state__customer_data___backend___backend____state value={ reflex___state____state__customer_data___backend___backend____state }>
-    <StateContexts.reflex___state____state__reflex___state____on_load_internal_state value={ reflex___state____state__reflex___state____on_load_internal_state }>
-    <StateContexts.reflex___state____state__reflex___state____frontend_event_exception_state value={ reflex___state____state__reflex___state____frontend_event_exception_state }>
-    <StateContexts.reflex___state____state__customer_data___backend___auth_state____auth_state value={ reflex___state____state__customer_data___backend___auth_state____auth_state }>
-      <DispatchContext value={dispatchers}>
-        {children}
-      </DispatchContext>
-    </StateContexts.reflex___state____state__customer_data___backend___auth_state____auth_state>
-    </StateContexts.reflex___state____state__reflex___state____frontend_event_exception_state>
-    </StateContexts.reflex___state____state__reflex___state____on_load_internal_state>
-    </StateContexts.reflex___state____state__customer_data___backend___backend____state>
-    </StateContexts.reflex___state____state__reflex___state____update_vars_internal_state>
-    </StateContexts.reflex___state____state>
-  )
+    createElement(StateContexts.reflex___state____state,{value: reflex___state____state},
+    createElement(StateContexts.reflex___state____state__reflex___state____on_load_internal_state,{value: reflex___state____state__reflex___state____on_load_internal_state},
+    createElement(StateContexts.reflex___state____state__reflex___state____update_vars_internal_state,{value: reflex___state____state__reflex___state____update_vars_internal_state},
+    createElement(StateContexts.reflex___state____state__customer_data___backend___auth_state____auth_state,{value: reflex___state____state__customer_data___backend___auth_state____auth_state},
+    createElement(StateContexts.reflex___state____state__reflex___state____frontend_event_exception_state,{value: reflex___state____state__reflex___state____frontend_event_exception_state},
+    createElement(StateContexts.reflex___state____state__customer_data___backend___backend____state,{value: reflex___state____state__customer_data___backend___backend____state},
+    createElement(DispatchContext.Provider, {value: dispatchers}, children),
+))))))  )
 }

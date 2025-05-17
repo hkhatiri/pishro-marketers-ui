@@ -95,38 +95,39 @@ def stats_cards_group() -> rx.Component:
         unit="کاربر", main_icon="users", main_icon_bg_color="grass",
     )
 
-    # --- کارت جدید برای تعداد کاربران در کانال‌ها ---
     users_in_channels_stat_card = stats_card(
-        stat_name="کاربران عضو کانال", # یا "تعداد عضویت در کانال‌ها"
-        value=MainState.users_in_channels_count_var, # استفاده از @rx.var جدید
-        unit="نفر", # یا "عضویت"
-        main_icon="rss", # آیکون مناسب برای کانال‌ها
-        main_icon_bg_color="cyan", # رنگ دلخواه
+        stat_name="کاربران عضو کانال",
+        value=MainState.users_in_channels_count_var,
+        unit="نفر",
+        main_icon="rss",
+        main_icon_bg_color="cyan",
     )
 
-    level_cards_display_section = rx.foreach(
-        AuthState.allowed_levels_for_current_referral,
-        lambda level_key: rx.cond(
-            level_key != NO_LEVEL_VALUE_INTERNAL,
-            stats_card(
-                stat_name=rx.Var.create(LEVEL_TRANSLATIONS.get(level_key, level_key.replace("level_", "سطح "))),
-                value=MainState.user_counts_by_level_var.get(level_key, 0),
-                unit="کاربر",
-                main_icon=rx.cond(level_key == "level_1", "user-round-check", 
-                            rx.cond(level_key == "level_2", "user-round-cog", 
-                            rx.cond(level_key == "level_golden", "gem", "award"))),
-                main_icon_bg_color=rx.cond(level_key == "level_1", "blue", 
-                                    rx.cond(level_key == "level_2", "orange", 
-                                    rx.cond(level_key == "level_golden", "yellow", "purple"))), # type: ignore
-            ),
-            rx.fragment()
-        )
-    )
+    # --- REMOVE OR COMMENT OUT THIS SECTION ---
+    # level_cards_display_section = rx.foreach(
+    #     AuthState.allowed_levels_for_current_referral,
+    #     lambda level_key: rx.cond(
+    #         level_key != NO_LEVEL_VALUE_INTERNAL,
+    #         stats_card(
+    #             stat_name=rx.Var.create(LEVEL_TRANSLATIONS.get(level_key, level_key.replace("level_", "سطح "))), # type: ignore
+    #             value=MainState.user_counts_by_level_var.get(level_key.to_string(), 0), # type: ignore
+    #             unit="کاربر",
+    #             main_icon=rx.cond(level_key == "level_1", "user-round-check",  # type: ignore
+    #                         rx.cond(level_key == "level_2", "user-round-cog",  # type: ignore
+    #                         rx.cond(level_key == "level_golden", "gem", "award"))), # type: ignore
+    #             main_icon_bg_color=rx.cond(level_key == "level_1", "blue",  # type: ignore
+    #                                 rx.cond(level_key == "level_2", "orange",  # type: ignore
+    #                                 rx.cond(level_key == "level_golden", "yellow", "purple"))), # type: ignore
+    #         ),
+    #         rx.fragment()
+    #     )
+    # )
+    # --- END OF REMOVAL ---
 
     return rx.grid(
         all_users_card,
-        users_in_channels_stat_card, # <--- اضافه کردن کارت جدید به گرید
-        level_cards_display_section,
-        columns={"initial": "1", "sm": "2", "md": "2", "lg": "4", "xl": "5"}, # اضافه کردن یک breakpoint برای 5 کارت
+        users_in_channels_stat_card,
+        # level_cards_display_section, # This is now removed
+        columns={"initial": "1", "sm": "2"}, # Adjust columns as needed
         spacing="3", width="100%", align_items="stretch", padding_y="0.5em",
     )

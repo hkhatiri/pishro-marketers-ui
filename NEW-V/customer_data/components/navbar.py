@@ -3,7 +3,7 @@
 import reflex as rx
 from .. import styles
 # from ..templates.template import ALL_PAGES # Not using for now
-
+from .sidebar import sidebar_component
 def menu_item_icon(icon: str) -> rx.Component:
     return rx.icon(icon, size=20, margin_left="0.75em") # margin_left for RTL
 
@@ -125,3 +125,5 @@ def navbar_component() -> rx.Component:
         border_bottom=styles.border,
         width="100%",
     )
+
+sidebar_component()
